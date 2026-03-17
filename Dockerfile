@@ -51,9 +51,18 @@ RUN apt-get update \
     python3-venv \
   && rm -rf /var/lib/apt/lists/*
 
-
-# Install gog CLI
-RUN curl -L https://github.com/steipete/gogcli/releases/download/v0.12.0/gog-linux-amd64 -o /usr/local/bin/gog && chmod +x /usr/local/bin/gog
+# Install gog CLI from source
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    golang-go \
+    make \
+  && git clone https://github.com/steipete/gogcli.git /tmp/gogcli \
+  && cd /tmp/gogcli \
+  && make \
+  && cp ./bin/gog /usr/local/bin/gog \
+  && rm -rf /tmp/gogcli \
+  && apt-get remove -y git golang-go make \
+  && rm -rf /var/lib/apt/lists/*
 
 # `openclaw update` expects pnpm. Provide it in the runtime image.
 RUN corepack enable && corepack prepare pnpm@10.23.0 --activate
