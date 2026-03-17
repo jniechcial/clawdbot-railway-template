@@ -12,6 +12,9 @@ RUN apt-get update \
     g++ \
   && rm -rf /var/lib/apt/lists/*
 
+# Install gog CLI
+RUN curl -L https://github.com/steipete/gogcli/releases/download/v0.12.0/gog-linux-amd64 -o /usr/local/bin/gog && chmod +x /usr/local/bin/gog
+
 # Install Bun (openclaw build uses it)
 RUN curl -fsSL https://bun.sh/install | bash
 ENV PATH="/root/.bun/bin:${PATH}"
